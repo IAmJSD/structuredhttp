@@ -1,0 +1,13 @@
+name: Run automated tests
+
+on: push
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Run tests
+        run: go test ./tests -v
