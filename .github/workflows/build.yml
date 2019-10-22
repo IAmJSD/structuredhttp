@@ -9,5 +9,8 @@ jobs:
     steps:
       - uses: actions/checkout@v1
 
+      - name: Copy to ~/go/src
+        run: mkdir -p ~/go/src/structuredhttp && cp -r . ~/go/src/structuredhttp && cd ~/go/src/structuredhttp
+
       - name: Run tests
         run: go test ./tests -v
