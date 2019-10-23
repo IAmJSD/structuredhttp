@@ -13,12 +13,12 @@ import (
 
 // Request defines the request that will be ran.
 type Request struct {
-	URL string `json:"url"`
-	Method string `json:"method"`
-	Headers map[string]string `json:"headers"`
-	CurrentTimeout *time.Duration `json:"timeout"`
-	CurrentReader io.Reader `json:"-"`
-	Error *error `json:"-"`
+	URL            string            `json:"url"`
+	Method         string            `json:"method"`
+	Headers        map[string]string `json:"headers"`
+	CurrentTimeout *time.Duration    `json:"timeout"`
+	CurrentReader  io.Reader         `json:"-"`
+	Error          *error            `json:"-"`
 }
 
 // Header sets a header.
@@ -135,7 +135,7 @@ func (r *Request) Run() (*Response, error) {
 		CurrentTimeout = *r.CurrentTimeout
 	}
 	Client := http.Client{
-		Timeout:       CurrentTimeout,
+		Timeout: CurrentTimeout,
 	}
 	Reader := r.CurrentReader
 	if Reader == nil {

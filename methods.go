@@ -3,8 +3,8 @@ package structuredhttp
 // GET adds support for a GET request.
 func GET(URL string) *Request {
 	return &Request{
-		URL:            URL,
-		Method:         "GET",
+		URL:     URL,
+		Method:  "GET",
 		Headers: map[string]string{},
 	}
 }
@@ -12,8 +12,8 @@ func GET(URL string) *Request {
 // POST adds support for a POST request.
 func POST(URL string) *Request {
 	return &Request{
-		URL:            URL,
-		Method:         "POST",
+		URL:     URL,
+		Method:  "POST",
 		Headers: map[string]string{},
 	}
 }
@@ -21,8 +21,8 @@ func POST(URL string) *Request {
 // PUT adds support for a PUT request.
 func PUT(URL string) *Request {
 	return &Request{
-		URL:            URL,
-		Method:         "PUT",
+		URL:     URL,
+		Method:  "PUT",
 		Headers: map[string]string{},
 	}
 }
@@ -30,8 +30,8 @@ func PUT(URL string) *Request {
 // PATCH adds support for a PATCH request.
 func PATCH(URL string) *Request {
 	return &Request{
-		URL:            URL,
-		Method:         "PATCH",
+		URL:     URL,
+		Method:  "PATCH",
 		Headers: map[string]string{},
 	}
 }
@@ -39,8 +39,8 @@ func PATCH(URL string) *Request {
 // DELETE adds support for a DELETE request.
 func DELETE(URL string) *Request {
 	return &Request{
-		URL:            URL,
-		Method:         "DELETE",
+		URL:     URL,
+		Method:  "DELETE",
 		Headers: map[string]string{},
 	}
 }
@@ -48,8 +48,8 @@ func DELETE(URL string) *Request {
 // OPTIONS adds support for a OPTIONS request.
 func OPTIONS(URL string) *Request {
 	return &Request{
-		URL:            URL,
-		Method:         "OPTIONS",
+		URL:     URL,
+		Method:  "OPTIONS",
 		Headers: map[string]string{},
 	}
 }
@@ -57,8 +57,8 @@ func OPTIONS(URL string) *Request {
 // HEAD adds support for a HEAD request.
 func HEAD(URL string) *Request {
 	return &Request{
-		URL:            URL,
-		Method:         "HEAD",
+		URL:     URL,
+		Method:  "HEAD",
 		Headers: map[string]string{},
 	}
 }
