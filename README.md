@@ -4,7 +4,7 @@ A lightweight structured HTTP client for Go with no third party dependencies. Th
 package main
 
 import (
-	"structuredhttp"
+	"github.com/jakemakesstuff/structuredhttp"
 	"time"
 )
 
