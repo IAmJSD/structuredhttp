@@ -4,7 +4,7 @@ A lightweight structured HTTP client for Go with no third party dependencies. Th
 package main
 
 import (
-	"structuredhttp"
+	"github.com/jakemakesstuff/structuredhttp"
 	"time"
 )
 
@@ -54,3 +54,6 @@ The response structure has several useful functions:
 - `Text` - This returns the response as text.
 
 If you need the raw response, the `RawResponse` attribute contains a pointer to the `http.Response` from the request.
+
+## Request error handling
+The Request structure has an `Error` attribute. If there is an error, the error should be attached to this attribute. Any other functions in the chain will be skipped, and in the `Run` function the error will be thrown.
