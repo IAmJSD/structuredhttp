@@ -106,6 +106,23 @@ func (r *Request) Plugin(Function func(r *Request)) *Request {
 	return r
 }
 
+// Query adds a URL query argument to the URL.
+func (r *Request) Query(Key string, Value string) *Request {
+	if r.Error != nil {
+		return r
+	}
+	u, err := url.Parse(r.URL)
+	if err != nil {
+		r.Error = &err
+		return r
+	}
+	q := u.Query()
+	q.Set(Key, Value)
+	u.RawQuery = q.Encode()
+	r.URL = u.String()
+	return r
+}
+
 // Run executes the request.
 func (r *Request) Run() (*Response, error) {
 	if r.Error != nil {
