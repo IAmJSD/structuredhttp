@@ -35,6 +35,7 @@ To make a request, you need to call the function representing the HTTP method. F
 - `URLEncodedForm` - This will take the values specified and turn it into a URL encoded form.
 - `MultipartForm` - This will take the buffer and content type after the creation of a multipart form and handle it.
 - `Plugin` - This will pass through to a third party function specified. The plugin will need to take `*structuredhttp.Request` as an argument.
+- `Query` - This adds a URL query argument to the URL.
 
 After you have made the request chain, you should call `Run`. This function will then return a pointer to the Response structure (described below) and an error which will not be null if something went wrong.
 
