@@ -12,5 +12,8 @@ jobs:
       - name: Copy to ~/go/src
         run: mkdir -p ~/go/src/structuredhttp && cp -r . ~/go/src/structuredhttp && cd ~/go/src/structuredhttp
 
-      - name: Run tests
+      - name: Run non-WASM tests
         run: go test ./tests -v
+
+      - name: Run WASM tests
+        run: GOOS=js GOARCH=wasm go test -exec="$(go env GOROOT)/misc/wasm/go_js_wasm_exec" ./tests -v
