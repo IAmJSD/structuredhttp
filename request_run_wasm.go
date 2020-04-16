@@ -164,12 +164,13 @@ func (r *Request) Run() (*Response, error) {
 	}
 
 	// Create the AbortController signal if needed.
-	Signal := js.Undefined()
-	if r.CurrentTimeout == nil && DefaultTimeout != 0 {
-		Signal = createSignal(DefaultTimeout.Milliseconds())
-	} else if r.CurrentTimeout != nil && *r.CurrentTimeout != 0 {
-		Signal = createSignal(r.CurrentTimeout.Milliseconds())
-	}
+	// TODO: Fix signals!
+	//Signal := js.Undefined()
+	//if r.CurrentTimeout == nil && DefaultTimeout != 0 {
+	//	Signal = createSignal(DefaultTimeout.Milliseconds())
+	//} else if r.CurrentTimeout != nil && *r.CurrentTimeout != 0 {
+	//	Signal = createSignal(r.CurrentTimeout.Milliseconds())
+	//}
 
 	// Defines the fetch arguments.
 	Reader := r.CurrentReader
@@ -177,7 +178,7 @@ func (r *Request) Run() (*Response, error) {
 		Reader = strings.NewReader("")
 	}
 	FetchArgs := map[string]interface{}{
-		"signal": Signal,
+		//"signal": Signal,
 		"method": r.Method,
 		"headers": strmap2obj(r.Headers),
 		"body": createReadableStream(r.CurrentReader),
