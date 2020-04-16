@@ -7,6 +7,7 @@ import (
 	"io"
 	"io/ioutil"
 	"net/http"
+	"reflect"
 	"strings"
 	"syscall/js"
 	"time"
@@ -52,6 +53,15 @@ func promiseHack(CalledPromise js.Value) (js.Value, error) {
 			return res, err
 		}
 	}
+}
+
+func strmap2obj(m interface{}) js.Value {
+	obj := js.Global().Call("Object")
+	x := reflect.ValueOf(m)
+	for _, k := range x.MapKeys() {
+		obj.Set(k.String(), x.MapIndex(x).String())
+	}
+	return obj
 }
 
 func fetch(URL string, Args map[string]interface{}) (js.Value, error) {
@@ -171,7 +181,7 @@ func (r *Request) Run() (*Response, error) {
 	FetchArgs := map[string]interface{}{
 		"signal": Signal,
 		"method": r.Method,
-		"headers": r.Headers,
+		"headers": strmap2obj(r.Headers),
 		"body": createReadableStream(r.CurrentReader),
 	}
 
