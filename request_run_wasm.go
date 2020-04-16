@@ -20,8 +20,8 @@ func promiseHack(CalledPromise js.Value) (js.Value, error) {
 	var res js.Value
 	var err error
 
-	// Set the catch to set the error.
 	CalledPromise.Call("catch", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+		// Set the catch to set the error.
 		done = true
 		if len(args) == 0 {
 			err = errors.New("")
@@ -36,10 +36,8 @@ func promiseHack(CalledPromise js.Value) (js.Value, error) {
 			err = errors.New(msg)
 		}
 		return nil
-	}))
-
-	// If there was no error, set the result.
-	CalledPromise.Call("then", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+	})).Call("then", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+		// If there was no error, set the result.
 		done = true
 		res = args[0]
 		return nil
@@ -82,8 +80,8 @@ func createSignal(ms int64) js.Value {
 	// Run the setTimeout API on the controller abort function.
 	js.Global().Call("setTimeout", controller.Get("abort"), ms)
 
-	// Return the controller.
-	return controller
+	// Return the controllers signal.
+	return controller.Get("signal")
 }
 
 func createReadableStream(r io.Reader) js.Value {
@@ -146,13 +144,29 @@ func (b *blobReader) Read(p []byte) (n int, err error) {
 }
 
 func fetch2http(fetch js.Value) *http.Response {
-	blob := fetch.Call("blob")
+	// Get the blob object.
+	blob, err := promiseHack(fetch.Call("blob"))
+	if err != nil {
+		// Hmmmmmm, this is a bug.
+		panic(err)
+	}
+
+	// Get the size and reader.
+	var Reader io.ReadCloser
+	Size := int64(blob.Get("size").Int())
+	if Size == 0 {
+		Reader = ioutil.NopCloser(strings.NewReader(""))
+	} else {
+		Reader = ioutil.NopCloser(&blobReader{streamReader: blob.Call("stream").Call("getReader")})
+	}
+
+	// Return the HTTP response.
 	return &http.Response{
 		Status:           fetch.Get("statusText").String(),
 		StatusCode:       fetch.Get("status").Int(),
 		Header:           goHeaders(fetch),
-		Body:             ioutil.NopCloser(&blobReader{streamReader: blob.Call("stream").Call("getReader")}),
-		ContentLength:    int64(blob.Get("size").Int()),
+		Body:             Reader,
+		ContentLength:    Size,
 	}
 }
 
@@ -164,13 +178,12 @@ func (r *Request) Run() (*Response, error) {
 	}
 
 	// Create the AbortController signal if needed.
-	// TODO: Fix signals!
-	//Signal := js.Undefined()
-	//if r.CurrentTimeout == nil && DefaultTimeout != 0 {
-	//	Signal = createSignal(DefaultTimeout.Milliseconds())
-	//} else if r.CurrentTimeout != nil && *r.CurrentTimeout != 0 {
-	//	Signal = createSignal(r.CurrentTimeout.Milliseconds())
-	//}
+	Signal := js.Undefined()
+	if r.CurrentTimeout == nil && DefaultTimeout != 0 {
+		Signal = createSignal(DefaultTimeout.Milliseconds())
+	} else if r.CurrentTimeout != nil && *r.CurrentTimeout != 0 {
+		Signal = createSignal(r.CurrentTimeout.Milliseconds())
+	}
 
 	// Defines the fetch arguments.
 	Reader := r.CurrentReader
@@ -178,10 +191,13 @@ func (r *Request) Run() (*Response, error) {
 		Reader = strings.NewReader("")
 	}
 	FetchArgs := map[string]interface{}{
-		//"signal": Signal,
+		"signal": Signal,
 		"method": r.Method,
 		"headers": strmap2obj(r.Headers),
 		"body": createReadableStream(r.CurrentReader),
+	}
+	if r.Method == "GET" || r.Method == "HEAD" {
+		delete(FetchArgs, "body")
 	}
 
 	// Call fetch.
