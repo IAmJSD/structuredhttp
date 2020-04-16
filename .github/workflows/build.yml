@@ -21,4 +21,4 @@ jobs:
           mv ~/go/bin/wasmbrowsertest ~/go/bin/go_js_wasm_exec
 
       - name: Run WASM tests
-        run: GOOS=js GOARCH=wasm go test -exec="$(go env GOROOT)/misc/wasm/go_js_wasm_exec" ./tests -v
+        run: GOOS=js GOARCH=wasm go test -exec="$HOME/bin/go_js_wasm_exec" ./tests -v
