@@ -55,8 +55,16 @@ func promiseHack(CalledPromise js.Value) (js.Value, error) {
 }
 
 func fetch(URL string, Args map[string]interface{}) (js.Value, error) {
+	// Create a new object.
+	obj := js.Global().Call("Object")
+
+	// Set the objects.
+	for k, v := range Args {
+		obj.Set(k, v)
+	}
+
 	// Call the fetch API.
-	return promiseHack(js.Global().Call("fetch", URL, Args))
+	return promiseHack(js.Global().Call("fetch", URL, obj))
 }
 
 func createSignal(ms int64) js.Value {
