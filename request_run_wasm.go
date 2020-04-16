@@ -7,7 +7,6 @@ import (
 	"io"
 	"io/ioutil"
 	"net/http"
-	"reflect"
 	"strings"
 	"syscall/js"
 	"time"
@@ -55,11 +54,10 @@ func promiseHack(CalledPromise js.Value) (js.Value, error) {
 	}
 }
 
-func strmap2obj(m interface{}) js.Value {
+func strmap2obj(m map[string]string) js.Value {
 	obj := js.Global().Call("Object")
-	x := reflect.ValueOf(m)
-	for _, k := range x.MapKeys() {
-		obj.Set(k.String(), x.MapIndex(x).String())
+	for k, v := range m {
+		obj.Set(k, v)
 	}
 	return obj
 }
