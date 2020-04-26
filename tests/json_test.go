@@ -8,7 +8,7 @@ import (
 
 func TestJSONPost(t *testing.T) {
 	response, err := structuredhttp.POST(
-		"https://cors-anywhere.herokuapp.com/postman-echo.com/post").Timeout(10 * time.Second).JSON(&map[string]string{"hello": "world"}).Run()
+		"https://cors-anywhere.herokuapp.com/postman-echo.com/post").Timeout(10*time.Second).Header("X-Requested-With", "structuredhttp").JSON(&map[string]string{"hello": "world"}).Run()
 
 	if err != nil {
 		t.Error(err.Error())
