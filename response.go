@@ -33,6 +33,19 @@ func (r *Response) JSON() (interface{}, error) {
 	return BasicInterface, nil
 }
 
+// JSONToPointer is used to be a non-generic JSON handler when you have a pointer.
+func (r *Response) JSONToPointer(Pointer interface{}) error {
+	b, err := r.Bytes()
+	if err != nil {
+		return err
+	}
+	err = json.Unmarshal(b, Pointer)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 // RaiseForStatus throws a error if the request is a 4XX/5XX.
 func (r *Response) RaiseForStatus() error {
 	FirstDigitStatus := math.Floor(float64(r.RawResponse.StatusCode) / 100)
