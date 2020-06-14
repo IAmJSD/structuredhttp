@@ -8,9 +8,9 @@ import (
 
 // RouteHandler defines the base HTTP URL/timeout which is used for routes.
 type RouteHandler struct {
-	BaseURL string             `json:"base_url"`
-	Timeout *time.Duration     `json:"-"`
-	Headers *map[string]string `json:"headers"`
+	BaseURL string            `json:"base_url"`
+	Timeout *time.Duration    `json:"-"`
+	Headers map[string]string `json:"headers"`
 }
 
 // GenerateURL takes a path and returns the URL with the path added.
@@ -38,7 +38,7 @@ func (r *RouteHandler) GET(Path string) *Request {
 		req = req.Timeout(*r.Timeout)
 	}
 	if r.Headers != nil {
-		for k, v := range *r.Headers {
+		for k, v := range r.Headers {
 			req = req.Header(k, v)
 		}
 	}
@@ -60,7 +60,7 @@ func (r *RouteHandler) POST(Path string) *Request {
 		req = req.Timeout(*r.Timeout)
 	}
 	if r.Headers != nil {
-		for k, v := range *r.Headers {
+		for k, v := range r.Headers {
 			req = req.Header(k, v)
 		}
 	}
@@ -82,7 +82,7 @@ func (r *RouteHandler) PUT(Path string) *Request {
 		req = req.Timeout(*r.Timeout)
 	}
 	if r.Headers != nil {
-		for k, v := range *r.Headers {
+		for k, v := range r.Headers {
 			req = req.Header(k, v)
 		}
 	}
@@ -104,7 +104,7 @@ func (r *RouteHandler) PATCH(Path string) *Request {
 		req = req.Timeout(*r.Timeout)
 	}
 	if r.Headers != nil {
-		for k, v := range *r.Headers {
+		for k, v := range r.Headers {
 			req = req.Header(k, v)
 		}
 	}
@@ -126,7 +126,7 @@ func (r *RouteHandler) DELETE(Path string) *Request {
 		req = req.Timeout(*r.Timeout)
 	}
 	if r.Headers != nil {
-		for k, v := range *r.Headers {
+		for k, v := range r.Headers {
 			req = req.Header(k, v)
 		}
 	}
@@ -148,7 +148,7 @@ func (r *RouteHandler) OPTIONS(Path string) *Request {
 		req = req.Timeout(*r.Timeout)
 	}
 	if r.Headers != nil {
-		for k, v := range *r.Headers {
+		for k, v := range r.Headers {
 			req = req.Header(k, v)
 		}
 	}
@@ -170,7 +170,7 @@ func (r *RouteHandler) HEAD(Path string) *Request {
 		req = req.Timeout(*r.Timeout)
 	}
 	if r.Headers != nil {
-		for k, v := range *r.Headers {
+		for k, v := range r.Headers {
 			req = req.Header(k, v)
 		}
 	}
