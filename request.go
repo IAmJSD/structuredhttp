@@ -49,6 +49,28 @@ func (r *Request) Bytes(Data []byte) *Request {
 	return r
 }
 
+// Serializer is a request body serializer.
+type Serializer struct {
+	Encode      func(data interface{}) ([]byte, error)
+	ContentType string
+}
+
+// Serialize sets response headers and calls Bytes with the serialized body.
+func (r *Request) Serialize(data interface{}, serializer Serializer) *Request {
+	if r.Error != nil {
+		return r
+	}
+	res, err := serializer.Encode(data)
+	if err != nil {
+		r.Error = &err
+		return r
+	}
+	r.Headers["Content-Length"] = strconv.Itoa(len(res))
+	r.Headers["Content-Type"] = serializer.ContentType
+	r.Bytes(res)
+	return r
+}
+
 // JSON sets the data to the JSON specified.
 func (r *Request) JSON(Data interface{}) *Request {
 	if r.Error != nil {
