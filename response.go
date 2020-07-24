@@ -14,6 +14,23 @@ type Response struct {
 	RawResponse *http.Response
 }
 
+// Parser is a response body parser. These can be found in the parsers package.
+type Parser func(responseBytes []byte, into interface{}) error
+
+// Parse parses the response body's bytes with a Parser.
+func (r *Response) Parse(parser Parser) (interface{}, error) {
+	b, err := r.Bytes()
+	if err != nil {
+		return nil, err
+	}
+	var BasicInterface interface{}
+	err = parser(b, &BasicInterface)
+	if err != nil {
+		return nil, err
+	}
+	return BasicInterface, nil
+}
+
 // Bytes gets the response as bytes.
 func (r *Response) Bytes() ([]byte, error) {
 	return ioutil.ReadAll(r.RawResponse.Body)
