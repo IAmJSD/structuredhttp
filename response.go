@@ -14,7 +14,7 @@ type Response struct {
 	RawResponse *http.Response
 }
 
-// Parser is a response body parser. These can be found in the parsers package.
+// Parser is a response body parser. These can be found in the data package.
 type Parser func(responseBytes []byte, into interface{}) error
 
 // Parse parses the response body's bytes with a Parser.
