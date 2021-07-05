@@ -1,12 +1,11 @@
-package tests
+package structuredhttp
 
 import (
-	"structuredhttp"
 	"testing"
 	"time"
 )
 
 func TestDefaultTimeout(t *testing.T) {
-	structuredhttp.SetDefaultTimeout(5 * time.Second)
+	SetDefaultTimeout(5 * time.Second)
 	t.Log("Default timeout successfully set.")
 }

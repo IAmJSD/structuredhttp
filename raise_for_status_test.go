@@ -1,13 +1,12 @@
-package tests
+package structuredhttp
 
 import (
-	"structuredhttp"
 	"testing"
 	"time"
 )
 
 func TestRaiseForStatus(t *testing.T) {
-	response, err := structuredhttp.GET(
+	response, err := GET(
 		"https://httpstat.us/403").Timeout(10 * time.Second).Run()
 
 	if err != nil {

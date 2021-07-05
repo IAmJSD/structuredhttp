@@ -1,13 +1,12 @@
-package tests
+package structuredhttp
 
 import (
-	"structuredhttp"
 	"testing"
 	"time"
 )
 
 func TestJSONPost(t *testing.T) {
-	response, err := structuredhttp.POST(
+	response, err := POST(
 		"https://cors-anywhere.herokuapp.com/postman-echo.com/post").Timeout(10*time.Second).Header("X-Requested-With", "structuredhttp").JSON(&map[string]string{"hello": "world"}).Run()
 
 	if err != nil {

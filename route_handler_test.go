@@ -1,14 +1,13 @@
-package tests
+package structuredhttp
 
 import (
-	"structuredhttp"
 	"testing"
 	"time"
 )
 
 func TestRouteHandler(t *testing.T) {
 	Timeout := time.Second * 10
-	handler := structuredhttp.RouteHandler{
+	handler := RouteHandler{
 		BaseURL: "https://httpstat.us",
 		Timeout: &Timeout,
 	}

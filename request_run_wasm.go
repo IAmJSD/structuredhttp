@@ -9,22 +9,17 @@ import (
 	"net/http"
 	"strings"
 	"syscall/js"
-	"time"
 )
 
 // HACK: Promises are not explicitly supported in Go right now, so we have to improvise.
-// 2ms was picked to hopefully not nuke the performance too much, but also allow us to get a response quick enough.
 func promiseHack(CalledPromise js.Value) (js.Value, error) {
-	// Set the done boolean, result and error.
-	var done bool
-	var res js.Value
-	var err error
+	// Defines the result channel.
+	resultChan := make(chan interface{})
 
 	CalledPromise.Call("catch", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
 		// Set the catch to set the error.
-		done = true
 		if len(args) == 0 {
-			err = errors.New("")
+			resultChan <- errors.New("")
 		} else {
 			var msg string
 			msgAttr := args[0].Get("message")
@@ -33,22 +28,24 @@ func promiseHack(CalledPromise js.Value) (js.Value, error) {
 			} else {
 				msg = msgAttr.String()
 			}
-			err = errors.New(msg)
+			resultChan <- errors.New(msg)
 		}
 		return nil
 	})).Call("then", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
 		// If there was no error, set the result.
-		done = true
-		res = args[0]
+		resultChan <- args[0]
 		return nil
 	}))
 
-	// Keep checking until it resolves.
-	for {
-		time.Sleep(2 * time.Millisecond)
-		if done {
-			return res, err
-		}
+	// Get the promise result.
+	res := <-resultChan
+	switch x := res.(type) {
+	case error:
+		return js.Value{}, x
+	case js.Value:
+		return x, nil
+	default:
+		panic("internal error - unknown type")
 	}
 }
 
