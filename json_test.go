@@ -26,7 +26,7 @@ func TestJSONPost(t *testing.T) {
 		return
 	}
 
-	World := i.(map[string]interface{})["data"].(map[string]interface{})["hello"].(string)
+	World := i.(map[string]interface{})["hello"].(string)
 	if World != "world" {
 		t.Error("Invalid string returned (" + World + ").")
 		return
